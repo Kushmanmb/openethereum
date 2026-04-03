@@ -214,6 +214,22 @@ fn format_vaults(vaults: &[String]) -> String {
 }
 
 fn load_password(path: &str) -> Result<Password, Error> {
+    const MAX_PASSWORD_FILE_SIZE: u64 = 1024; // 1 KB — passwords should never be this large
+    let metadata = fs::metadata(path).map_err(|e| {
+        ethstore::Error::Custom(format!("Error reading password file '{}': {}", path, e))
+    })?;
+    if !metadata.is_file() {
+        return Err(ethstore::Error::Custom(format!(
+            "Password path '{}' is not a regular file",
+            path
+        )));
+    }
+    if metadata.len() > MAX_PASSWORD_FILE_SIZE {
+        return Err(ethstore::Error::Custom(format!(
+            "Password file '{}' exceeds maximum allowed size",
+            path
+        )));
+    }
     let mut file = fs::File::open(path).map_err(|e| {
         ethstore::Error::Custom(format!("Error opening password file '{}': {}", path, e))
     })?;
@@ -221,8 +237,8 @@ fn load_password(path: &str) -> Result<Password, Error> {
     file.read_to_string(&mut password).map_err(|e| {
         ethstore::Error::Custom(format!("Error reading password file '{}': {}", path, e))
     })?;
-    // drop EOF
-    let _ = password.pop();
+    // Trim any trailing newline characters (handles LF, CRLF, and bare CR)
+    let password = password.trim_end_matches(|c| c == '\r' || c == '\n').to_string();
     Ok(password.into())
 }
 

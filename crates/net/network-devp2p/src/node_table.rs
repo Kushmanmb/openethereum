@@ -28,7 +28,6 @@ use std::{
     hash::{Hash, Hasher},
     net::{Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6, ToSocketAddrs},
     path::PathBuf,
-    slice,
     str::FromStr,
     time::{self, Duration, SystemTime},
 };
@@ -88,16 +87,21 @@ impl NodeEndpoint {
                 Ipv4Addr::new(addr_bytes[0], addr_bytes[1], addr_bytes[2], addr_bytes[3]),
                 tcp_port,
             ))),
-            16 => unsafe {
-                let o: *const u16 = addr_bytes.as_ptr() as *const u16;
-                let o = slice::from_raw_parts(o, 8);
+            16 => {
+                let mut groups = [0u16; 8];
+                for (i, chunk) in addr_bytes.chunks(2).enumerate() {
+                    groups[i] = u16::from_ne_bytes([chunk[0], chunk[1]]);
+                }
                 Ok(SocketAddr::V6(SocketAddrV6::new(
-                    Ipv6Addr::new(o[0], o[1], o[2], o[3], o[4], o[5], o[6], o[7]),
+                    Ipv6Addr::new(
+                        groups[0], groups[1], groups[2], groups[3], groups[4], groups[5],
+                        groups[6], groups[7],
+                    ),
                     tcp_port,
                     0,
                     0,
                 )))
-            },
+            }
             _ => Err(DecoderError::RlpInconsistentLengthAndData),
         }?;
         Ok(NodeEndpoint { address, udp_port })
@@ -108,10 +112,15 @@ impl NodeEndpoint {
             SocketAddr::V4(a) => {
                 rlp.append(&(&a.ip().octets()[..]));
             }
-            SocketAddr::V6(a) => unsafe {
-                let o: *const u8 = a.ip().segments().as_ptr() as *const u8;
-                rlp.append(&slice::from_raw_parts(o, 16));
-            },
+            SocketAddr::V6(a) => {
+                let mut bytes = [0u8; 16];
+                for (i, &seg) in a.ip().segments().iter().enumerate() {
+                    let b = seg.to_ne_bytes();
+                    bytes[i * 2] = b[0];
+                    bytes[i * 2 + 1] = b[1];
+                }
+                rlp.append(&(&bytes[..]));
+            }
         };
         rlp.append(&self.udp_port);
         rlp.append(&self.address.port());

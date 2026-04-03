@@ -42,7 +42,8 @@ pub fn to_hex(bytes: &[u8]) -> String {
         v.push(CHARS[(byte & 0xf) as usize]);
     }
 
-    unsafe { String::from_utf8_unchecked(v) }
+    // CHARS is b"0123456789abcdef", so every byte pushed is valid ASCII/UTF-8.
+    String::from_utf8(v).expect("hex chars are always valid UTF-8")
 }
 
 pub fn get_cache_size(block_number: u64) -> usize {
