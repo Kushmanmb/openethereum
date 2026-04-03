@@ -39,7 +39,7 @@ There are a few basic ground-rules for contributors (including the maintainer(s)
 
 ### Recommendations
 
-* **Non-master branch names** *should* be prefixed with a short name moniker, followed by the associated Github Issue ID (if any), and a brief description of the task using the format `<GITHUB_USERNAME>-<ISSUE_ID>-<BRIEF_DESCRIPTION>` (e.g. `gavin-123-readme`). The name moniker helps people to inquiry about their unfinished work, and the GitHub Issue ID helps your future self and other developers (particularly those who are onboarding) find out about and understand the original scope of the task, and where it fits into Parity Ethereum [Projects](https://github.com/openethereum/openethereum/projects).
+* **Non-master branch names** *should* be prefixed with a short name moniker, followed by the associated Github Issue ID (if any), and a brief description of the task using the format `<GITHUB_USERNAME>-<ISSUE_ID>-<BRIEF_DESCRIPTION>` (e.g. `gavin-123-readme`). The name moniker helps people to inquiry about their unfinished work, and the GitHub Issue ID helps your future self and other developers (particularly those who are onboarding) find out about and understand the original scope of the task, and where it fits into OpenEthereum [Projects](https://github.com/openethereum/openethereum/projects).
 * **Remove stale branches periodically**
 
 ### Preparing Pull Requests
@@ -63,6 +63,6 @@ When doing a review, make sure to look for any:
 
 ## License.
 
-By contributing to Parity Ethereum, you agree that your contributions will be licensed under the [GPLv3 License](../LICENSE).
+By contributing to OpenEthereum, you agree that your contributions will be licensed under the [GPLv3 License](../LICENSE).
 
 Each contributor has to sign our Contributor License Agreement. The purpose of the CLA is to ensure that the guardian of a project's outputs has the necessary ownership or grants of rights over all contributions to allow them to distribute under the chosen license. You can read and sign our full Contributor License Agreement at [cla.parity.io](https://cla.parity.io) before submitting a pull request.

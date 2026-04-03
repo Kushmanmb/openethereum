@@ -41,8 +41,8 @@ use ethstore::{
 mod crack;
 
 pub const USAGE: &'static str = r#"
-Parity Ethereum key management tool.
-  Copyright 2015-2019 Parity Technologies (UK) Ltd.
+OpenEthereum key management tool.
+  Copyright 2015-2020 Parity Technologies (UK) Ltd.
 
 Usage:
     ethstore insert <secret> <password> [--dir DIR] [--vault VAULT] [--vault-pwd VAULTPWD]
