@@ -109,7 +109,7 @@ pub fn start_prometheus_metrics(
             })
         })
         .map_err(|e| eprintln!("server error: {}", e));
-    info!("Started prometeus metrics at http://{}/metrics", addr);
+    info!("Started prometheus metrics at http://{}/metrics", addr);
 
     deps.executor.spawn(server);
 
