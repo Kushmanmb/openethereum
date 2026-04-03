@@ -26,8 +26,8 @@ Fast and feature-rich multi-network Ethereum client.
 4. [Testing](#chapter-004)
 5. [Documentation](#chapter-005)
 6. [Toolchain](#chapter-006)
-7. [Contributing](#chapter-008)
-8. [License](#chapter-009)
+7. [Contributing](#chapter-007)
+8. [License](#chapter-008)
 
 
 ## 1. Description <a id="chapter-001"></a>

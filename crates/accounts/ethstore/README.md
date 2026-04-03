@@ -1,12 +1,12 @@
 ## ethstore-cli
 
-Parity Ethereum key management.
+OpenEthereum key management.
 
 ### Usage
 
 ```
-Parity Ethereum key management tool.
-  Copyright 2015-2019 Parity Technologies (UK) Ltd.
+OpenEthereum key management tool.
+  Copyright 2015-2020 Parity Technologies (UK) Ltd.
 
 Usage:
     ethstore insert <secret> <password> [--dir DIR] [--vault VAULT] [--vault-pwd VAULTPWD]
@@ -330,10 +330,10 @@ ethstore move-from-vault 00e63fdb87ceb815ec96ae185b8f7381a0b4a5ea vault1 vault1_
 OK
 ```
 
-## Parity Ethereum toolchain
-_This project is a part of the Parity Ethereum toolchain._
+## OpenEthereum toolchain
+_This project is a part of the OpenEthereum toolchain._
 
-- [evmbin](https://github.com/paritytech/parity-ethereum/blob/master/evmbin/) - EVM implementation for Parity Ethereum.
-- [ethabi](https://github.com/paritytech/ethabi) - Parity Ethereum function calls encoding.
-- [ethstore](https://github.com/paritytech/parity-ethereum/blob/master/accounts/ethstore) - Parity Ethereum key management.
-- [ethkey](https://github.com/paritytech/parity-ethereum/blob/master/accounts/ethkey) - Parity Ethereum keys generator.
+- [evmbin](https://github.com/openethereum/openethereum/blob/main/bin/evmbin/) - EVM implementation for OpenEthereum.
+- [ethabi](https://github.com/openethereum/ethabi) - OpenEthereum function calls encoding.
+- [ethstore](https://github.com/openethereum/openethereum/blob/main/crates/accounts/ethstore) - OpenEthereum key management.
+- [ethkey](https://github.com/openethereum/openethereum/blob/main/crates/accounts/ethkey) - OpenEthereum keys generator.

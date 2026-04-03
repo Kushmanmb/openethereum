@@ -682,11 +682,12 @@ impl Configuration {
     }
 
     fn gas_pricer_config(&self) -> Result<GasPricerConfig, String> {
-        fn wei_per_gas(usd_per_tx: f32, usd_per_eth: f32) -> U256 {
+        fn wei_per_gas(usd_per_tx: f32, usd_per_eth: f32) -> Result<U256, String> {
             let wei_per_usd: f32 = 1.0e18 / usd_per_eth;
             let gas_per_tx: f32 = 21000.0;
             let wei_per_gas: f32 = wei_per_usd * usd_per_tx / gas_per_tx;
-            U256::from_dec_str(&format!("{:.0}", wei_per_gas)).unwrap()
+            U256::from_dec_str(&format!("{:.0}", wei_per_gas))
+                .map_err(|e| format!("Invalid wei-per-gas value: {}", e))
         }
 
         if let Some(dec) = self.args.arg_min_gas_price {
@@ -704,7 +705,7 @@ impl Configuration {
                 api_endpoint: ETHERSCAN_ETH_PRICE_ENDPOINT.to_string(),
             })
         } else if let Ok(usd_per_eth_parsed) = to_price(&self.args.arg_usd_per_eth) {
-            let wei_per_gas = wei_per_gas(usd_per_tx, usd_per_eth_parsed);
+            let wei_per_gas = wei_per_gas(usd_per_tx, usd_per_eth_parsed)?;
 
             info!(
                 "Using a fixed conversion rate of Ξ1 = {} ({} wei/gas)",
@@ -716,10 +717,18 @@ impl Configuration {
 
             Ok(GasPricerConfig::Fixed(wei_per_gas))
         } else {
+            let endpoint = self.args.arg_usd_per_eth.clone();
+            if !endpoint.starts_with("https://") && !endpoint.starts_with("http://") {
+                return Err(format!(
+                    "Invalid --usd-per-eth value '{}': must be 'auto', a numeric USD price, \
+                     or an http/https URL",
+                    endpoint
+                ));
+            }
             Ok(GasPricerConfig::Calibrated {
                 usd_per_tx: usd_per_tx,
                 recalibration_period: to_duration(self.args.arg_price_update_period.as_str())?,
-                api_endpoint: self.args.arg_usd_per_eth.clone(),
+                api_endpoint: endpoint,
             })
         }
     }
@@ -1051,6 +1060,11 @@ impl Configuration {
 
     fn interface(&self, interface: &str) -> String {
         if self.args.flag_unsafe_expose {
+            warn!(
+                "{}",
+                "The --unsafe-expose flag is set: all interfaces and host filters are \
+                 disabled. Do NOT use this in production environments."
+            );
             return "0.0.0.0".into();
         }
 
